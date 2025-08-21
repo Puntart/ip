@@ -9,7 +9,7 @@ public class BobMortimer {
                 "|____/    \\___/   |____/       |_|  |_|   \\___/   |_| \\_\\    |_|      |_|    |_|  |_|  |_____|  |_| \\_\\ :) \n";
         String LINE = "____________________________________________________________";
         Scanner userInput = new Scanner(System.in);
-        String tasks[] = new String[100];
+        Task tasks[] = new Task[100];
         int taskNo = 0;
 
 
