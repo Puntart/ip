@@ -1,3 +1,6 @@
+import com.sun.source.util.TaskListener;
+
+import javax.sound.midi.SysexMessage;
 import java.util.Scanner;
 
 public class BobMortimer {
@@ -9,7 +12,7 @@ public class BobMortimer {
                 "|____/    \\___/   |____/       |_|  |_|   \\___/   |_| \\_\\    |_|      |_|    |_|  |_|  |_____|  |_| \\_\\ :) \n";
         String LINE = "____________________________________________________________";
         Scanner userInput = new Scanner(System.in);
-        Task tasks[] = new Task[100];
+        Task tasksList[] = new Task[100];
         int taskNo = 0;
 
 
@@ -22,18 +25,34 @@ public class BobMortimer {
         //User input
         while (true) {
             String instruction = userInput.nextLine();
-            if(instruction.equals("bye")) {
+            if(instruction.equals("bye")) { //bye
                 break;
             }
-            else if(instruction.equals("list")) {
-                System.out.println("\n" + LINE + "\n");
+            else if(instruction.equals("list")) { //list
+                System.out.println("\n" + LINE + "\n" + "Here you go:\n");
                 for(int i=0; i < taskNo; i++) {
-                    System.out.println((i+1) + ". " + tasks[i]);
+                    System.out.print((i+1) + ". ");
+                    tasksList[i].toString();
                 }
                 continue;
             }
+            else if(instruction.matches("^mark\\s+\\d+$")) {  //mark
+                System.out.println("\n" + LINE + "\n" + "Nice! It's done!:\n");
+                int n = Integer.parseInt(instruction.split("\\s+")[1]);
+                tasksList[n-1].markAsDone();
+                tasksList[n-1].toString();
+                continue;
+            }
+            else if(instruction.matches("^unmark\\s+\\d+$")) {  //unmark
+                System.out.println("\n" + LINE + "\n" + "OK, not done!:\n");
+                int n = Integer.parseInt(instruction.split("\\s+")[1]);
+                tasksList[n-1].markUndone();
+                tasksList[n-1].toString();
+                continue;
+            }
             System.out.println(instruction + "\n" + LINE + "\n");
-            tasks[taskNo] = instruction;
+            Task task = new Task(instruction);
+            tasksList[taskNo] = task;
             taskNo++;
         }
 

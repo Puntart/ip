@@ -18,6 +18,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return "";
+        if (isDone == true) {
+            System.out.println("[X]" + description);
+        }
+        else if (isDone == false) {
+            System.out.println("[ ]" + description);
+        }
+        return "fail";
     }
 }
