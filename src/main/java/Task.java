@@ -16,14 +16,19 @@ public class Task {
         this.isDone = false;
     }
 
+    public boolean getisDone() {
+        return this.isDone;
+    }
+
     @Override
     public String toString() {
+        String status = "";
         if (isDone == true) {
-            System.out.println("[X]" + description);
+            status = "[X] ";
         }
         else if (isDone == false) {
-            System.out.println("[ ]" + description);
+            status = "[ ] ";
         }
-        return "fail";
+        return status + description;
     }
 }

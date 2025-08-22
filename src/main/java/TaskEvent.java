@@ -1,15 +1,17 @@
 public class TaskEvent extends Task {
 
-    private String duration;
+    private String startDate;
+    private String endDate;
 
-    public TaskEvent(String description, String deadline) {
+    public TaskEvent(String description, String startDate, String endDate) {
         super(description);
-        this.duration = duration;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString();
+        return "[E]" + super.toString() + " (from: " + startDate + " to: " + endDate + ")";
     }
 
 }
