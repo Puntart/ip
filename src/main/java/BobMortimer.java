@@ -24,71 +24,73 @@ public class BobMortimer {
 
         //User input
         while (true) {
-            String instruction = userInput.nextLine();
-            if(instruction.equals("bye")) { //bye
-                break;
-            }
-            else if(instruction.equals("list")) { //list
-                System.out.println("\n" + LINE + "\n" + "Here you go:\n");
-                for(int i=0; i < taskNo; i++) {
-                    System.out.print((i+1) + ". " + tasksList[i].toString() + "\n");
+            try {
+                String instruction = userInput.nextLine();
+                if (instruction.equals("bye")) { //bye
+                    break;
+                } else if (instruction.equals("list")) { //list
+                    System.out.println("\n" + LINE + "\n" + "Here you go:\n");
+                    for (int i = 0; i < taskNo; i++) {
+                        System.out.print((i + 1) + ". " + tasksList[i].toString() + "\n");
+                    }
+                    System.out.println(LINE + "\n");
+                } else if (instruction.matches("^mark\\s+\\d+$")) {  //mark
+                    System.out.println("\n" + LINE + "\n" + "Nice! It's done!:\n");
+                    int n = Integer.parseInt(instruction.split("\\s+")[1]);
+                    if (n < 1 || n > taskNo) {
+                        throw new BobException("Invalid task number!");
+                    }
+                    tasksList[n - 1].markAsDone();
+                    System.out.println(tasksList[n - 1].toString() + "\n" + LINE);
+                } else if (instruction.matches("^unmark\\s+\\d+$")) {  //unmark
+                    System.out.println("\n" + LINE + "\n" + "OK, not done!:\n");
+                    int n = Integer.parseInt(instruction.split("\\s+")[1]);
+                    if (n < 1 || n > taskNo) {
+                        throw new BobException("Invalid task number!");
+                    }
+                    tasksList[n - 1].markUndone();
+                    System.out.println(tasksList[n - 1].toString() + "\n" + LINE);
+                } else if (instruction.toLowerCase().startsWith("todo ") || instruction.toLowerCase().startsWith("todo")) {
+                    if (instruction.length() == 4) {
+                        throw new BobException("OOPS!!! The description of a todo cannot be empty.");
+                    }
+                    String description = instruction.substring(5).trim();
+                    if (description.isEmpty()) {
+                        throw new BobException("OOPS!!! The description of a todo cannot be empty.");
+                    }
+                    TaskToDo task = new TaskToDo(description);
+                    tasksList[taskNo] = task;
+                    System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
+                            + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
+                    taskNo++;
+                } else if (instruction.toLowerCase().startsWith("deadline ") || instruction.toLowerCase().startsWith("deadline")) {
+                    String cut = instruction.substring(9).trim();
+                    int by = cut.indexOf("/by");
+                    String description = cut.substring(0, by).trim();
+                    String deadline = cut.substring(by + 3).trim();
+                    TaskDeadline task = new TaskDeadline(description, deadline);
+                    tasksList[taskNo] = task;
+                    System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
+                            + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
+                    taskNo++;
+                } else if (instruction.toLowerCase().startsWith("event ") || instruction.toLowerCase().startsWith("event")) {
+                    String cut = instruction.substring(6).trim();
+                    int from = cut.indexOf("/from");
+                    int to = cut.indexOf("/to", from + 1);
+                    String description = cut.substring(0, from).trim();
+                    String startDate = cut.substring(from + 5, to).trim();
+                    String endDate = cut.substring(to + 3).trim();
+                    TaskEvent task = new TaskEvent(description, startDate, endDate);
+                    tasksList[taskNo] = task;
+                    System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
+                            + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
+                    taskNo++;
+                } else {
+                    throw new BobException("wot?");
                 }
-                System.out.println(LINE + "\n");
-                continue;
+            } catch (BobException e) {
+                System.out.println("\n" + LINE + "\n" + "  " + e.getMessage() + "\n" + LINE);
             }
-            else if(instruction.matches("^mark\\s+\\d+$")) {  //mark
-                System.out.println("\n" + LINE + "\n" + "Nice! It's done!:\n");
-                int n = Integer.parseInt(instruction.split("\\s+")[1]);
-                tasksList[n-1].markAsDone();
-                tasksList[n-1].toString();
-                continue;
-            }
-            else if(instruction.matches("^unmark\\s+\\d+$")) {  //unmark
-                System.out.println("\n" + LINE + "\n" + "OK, not done!:\n");
-                int n = Integer.parseInt(instruction.split("\\s+")[1]);
-                tasksList[n-1].markUndone();
-                tasksList[n-1].toString();
-                continue;
-            }
-            else if(instruction.toLowerCase().startsWith("todo ")) {
-                String description = instruction.substring(5).trim();
-                TaskToDo task = new TaskToDo(description);
-                tasksList[taskNo] = task;
-                System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
-                                    + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
-                taskNo++;
-                continue;
-            }
-            else if(instruction.toLowerCase().startsWith("deadline ")) {
-                String cut = instruction.substring(9).trim();
-                int by = cut.indexOf("/by");
-                String description = cut.substring(0, by).trim();
-                String deadline = cut.substring(by + 3).trim();
-                TaskDeadline task = new TaskDeadline(description, deadline);
-                tasksList[taskNo] = task;
-                System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
-                        + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
-                taskNo++;
-                continue;
-            }
-            else if(instruction.toLowerCase().startsWith("event ")) {
-                String cut = instruction.substring(6).trim();
-                int from = cut.indexOf("/from");
-                int to = cut.indexOf("/to", from + 1);
-                String description = cut.substring(0, from).trim();
-                String startDate = cut.substring(from + 5, to).trim();
-                String endDate = cut.substring(to + 3).trim();
-                TaskEvent task = new TaskEvent(description, startDate, endDate);
-                tasksList[taskNo] = task;
-                System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
-                        + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
-                taskNo++;
-                continue;
-            }
-            System.out.println(instruction + "\n" + LINE + "\n");
-            Task task = new Task(instruction);
-            tasksList[taskNo] = task;
-            taskNo++;
         }
 
         //exit
