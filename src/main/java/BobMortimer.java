@@ -1,6 +1,7 @@
 import com.sun.source.util.TaskListener;
 
 import javax.sound.midi.SysexMessage;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BobMortimer {
@@ -12,7 +13,7 @@ public class BobMortimer {
                 "|____/    \\___/   |____/       |_|  |_|   \\___/   |_| \\_\\    |_|      |_|    |_|  |_|  |_____|  |_| \\_\\ :) \n";
         String LINE = "____________________________________________________________";
         Scanner userInput = new Scanner(System.in);
-        Task tasksList[] = new Task[100];
+        ArrayList<Task> tasksList = new ArrayList<>(100);
         int taskNo = 0;
 
 
@@ -31,7 +32,7 @@ public class BobMortimer {
                 } else if (instruction.equals("list")) { //list
                     System.out.println("\n" + LINE + "\n" + "Here you go:\n");
                     for (int i = 0; i < taskNo; i++) {
-                        System.out.print((i + 1) + ". " + tasksList[i].toString() + "\n");
+                        System.out.print((i + 1) + ". " + tasksList.get(i).toString() + "\n");
                     }
                     System.out.println(LINE + "\n");
                 } else if (instruction.matches("^mark\\s+\\d+$")) {  //mark
@@ -40,16 +41,16 @@ public class BobMortimer {
                     if (n < 1 || n > taskNo) {
                         throw new BobException("Invalid task number!");
                     }
-                    tasksList[n - 1].markAsDone();
-                    System.out.println(tasksList[n - 1].toString() + "\n" + LINE);
+                    tasksList.get(n-1).markAsDone();
+                    System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
                 } else if (instruction.matches("^unmark\\s+\\d+$")) {  //unmark
                     System.out.println("\n" + LINE + "\n" + "OK, not done!:\n");
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
                     if (n < 1 || n > taskNo) {
                         throw new BobException("Invalid task number!");
                     }
-                    tasksList[n - 1].markUndone();
-                    System.out.println(tasksList[n - 1].toString() + "\n" + LINE);
+                    tasksList.get(n-1).markUndone();
+                    System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
                 } else if (instruction.toLowerCase().startsWith("todo ") || instruction.toLowerCase().startsWith("todo")) {
                     if (instruction.length() == 4) {
                         throw new BobException("OOPS!!! The description of a todo cannot be empty.");
@@ -59,7 +60,7 @@ public class BobMortimer {
                         throw new BobException("OOPS!!! The description of a todo cannot be empty.");
                     }
                     TaskToDo task = new TaskToDo(description);
-                    tasksList[taskNo] = task;
+                    tasksList.add(task);
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
                     taskNo++;
@@ -69,7 +70,7 @@ public class BobMortimer {
                     String description = cut.substring(0, by).trim();
                     String deadline = cut.substring(by + 3).trim();
                     TaskDeadline task = new TaskDeadline(description, deadline);
-                    tasksList[taskNo] = task;
+                    tasksList.add(task);
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
                     taskNo++;
@@ -81,10 +82,19 @@ public class BobMortimer {
                     String startDate = cut.substring(from + 5, to).trim();
                     String endDate = cut.substring(to + 3).trim();
                     TaskEvent task = new TaskEvent(description, startDate, endDate);
-                    tasksList[taskNo] = task;
+                    tasksList.add(task);
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
                     taskNo++;
+                } else if (instruction.matches("(?i)^delete\\s+\\d+$")) {
+                    int n = Integer.parseInt(instruction.trim().split("\\s+")[1]);
+                    if (n < 1 || n > taskNo) {
+                        throw new BobException("Invalid task number!");
+                    }
+                    System.out.println("\n" + LINE + "\n" + "Ok, I have removed the task:\n" + tasksList.get(n-1).toString()
+                            + "\nNow you have " + (taskNo - 1) + " tasks in the list\n" + LINE);
+                    tasksList.remove(n-1);
+                    taskNo--;
                 } else {
                     throw new BobException("wot?");
                 }
