@@ -3,8 +3,12 @@ import com.sun.source.util.TaskListener;
 import javax.sound.midi.SysexMessage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BobMortimer {
     public static void main(String[] args) {
@@ -121,24 +125,45 @@ public class BobMortimer {
     private static void readFileTasks(String filePath, ArrayList<Task> tasksList) throws FileNotFoundException {
         File f = new File(filePath); // create a File for the given file path
         Scanner s = new Scanner(f); // create a Scanner using the File as the source
+
+        Pattern header = Pattern.compile("^\\[(T|D|E)\\]\\[(X| )\\]\\s+(.*)$");
+        Pattern pDeadline = Pattern.compile("^(.*)\\s*\\(by:\\s*(.*)\\)\\s*$", Pattern.CASE_INSENSITIVE);
+        Pattern pEvent = Pattern.compile("^(.*)\\s*\\(from:\\s*(.*?)\\s+to:\\s*(.*?)\\)\\s*$",
+                Pattern.CASE_INSENSITIVE);
+
         while (s.hasNext()) {
             String line = s.nextLine().trim();
-            String[] p = line.split("\\s*\\|\\s*");
+            Matcher match = header.matcher(line);
+            if (!match.matches()) {
+                System.err.println("Skipping unparsable line: " + line);
+                continue;
+            }
 
-            String taskType = p[0];
-            boolean isDone = "1".equals(p[1]);
-            String description = p[2];
+            String taskType = match.group(1);
+            boolean isDone = match.group(2).equals("X");
+            String rest = match.group(3).trim();
 
             Task task = null;
             if(taskType.equals("T")) {
-                task = new TaskToDo(description);
+                task = new TaskToDo(rest);
             } else if(taskType.equals("D")) {
-                String deadline = (p.length >= 4) ? p[3] : "";
-                task = new TaskDeadline(description, deadline);
+                Matcher mDeadline = pDeadline.matcher(rest);
+                if (mDeadline.matches()) {
+                    task = new TaskDeadline(mDeadline.group(1).trim(), mDeadline.group(2).trim());
+                } else {
+                    // fallback if "(by: ...)" is missing
+                    task = new TaskDeadline(rest, "");
+                }
             } else if(taskType.equals("E")) {
-                String startDate = (p.length >= 4) ? p[3] : "";
-                String endDate = (p.length >= 5) ? p[4] : "";
-                task = new TaskEvent(description, startDate, endDate);
+                Matcher mEvent = pEvent.matcher(rest);
+                if (mEvent.matches()) {
+                    task = new TaskEvent(mEvent.group(1).trim(),
+                            mEvent.group(2).trim(),
+                            mEvent.group(3).trim());
+                } else {
+                    // fallback if "(from: ... to: ...)" is missing
+                    task = new TaskEvent(rest, "", "");
+                }
             }
 
             if (isDone) {
