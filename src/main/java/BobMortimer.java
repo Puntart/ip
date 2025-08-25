@@ -1,6 +1,8 @@
 import com.sun.source.util.TaskListener;
 
 import javax.sound.midi.SysexMessage;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -22,6 +24,14 @@ public class BobMortimer {
                 "Hello I'm\n" + logo
                 + "\nWhat can I do for you?\n"
                 + LINE + "\n");
+
+        //Reading From File
+        try {
+            readFileTasks("BobMortimer.txt", tasksList);
+            taskNo = tasksList.size();
+        } catch (FileNotFoundException e) {
+            System.out.println("File does not exist or File not found");
+        }
 
         //User input
         while (true) {
@@ -107,4 +117,35 @@ public class BobMortimer {
         System.out.println("Bye. Hope to see you again soon!\n"
                         + LINE);
     }
+
+    private static void readFileTasks(String filePath, ArrayList<Task> tasksList) throws FileNotFoundException {
+        File f = new File(filePath); // create a File for the given file path
+        Scanner s = new Scanner(f); // create a Scanner using the File as the source
+        while (s.hasNext()) {
+            String line = s.nextLine().trim();
+            String[] p = line.split("\\s*\\|\\s*");
+
+            String taskType = p[0];
+            boolean isDone = "1".equals(p[1]);
+            String description = p[2];
+
+            Task task = null;
+            if(taskType.equals("T")) {
+                task = new TaskToDo(description);
+            } else if(taskType.equals("D")) {
+                String deadline = (p.length >= 4) ? p[3] : "";
+                task = new TaskDeadline(description, deadline);
+            } else if(taskType.equals("E")) {
+                String startDate = (p.length >= 4) ? p[3] : "";
+                String endDate = (p.length >= 5) ? p[4] : "";
+                task = new TaskEvent(description, startDate, endDate);
+            }
+
+            if (isDone) {
+                task.markAsDone();
+            }
+            tasksList.add(task);
+        }
+    }
+
 }
