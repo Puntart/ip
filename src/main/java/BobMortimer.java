@@ -57,6 +57,7 @@ public class BobMortimer {
                     }
                     tasksList.get(n-1).markAsDone();
                     System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
+                    writeToFile("BobMortimer.txt", tasksList);
                 } else if (instruction.matches("^unmark\\s+\\d+$")) {  //unmark
                     System.out.println("\n" + LINE + "\n" + "OK, not done!:\n");
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
@@ -65,6 +66,7 @@ public class BobMortimer {
                     }
                     tasksList.get(n-1).markUndone();
                     System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
+                    writeToFile("BobMortimer.txt", tasksList);
                 } else if (instruction.toLowerCase().startsWith("todo ") || instruction.toLowerCase().startsWith("todo")) {
                     if (instruction.length() == 4) {
                         throw new BobException("OOPS!!! The description of a todo cannot be empty.");
@@ -78,6 +80,7 @@ public class BobMortimer {
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
                     taskNo++;
+                    writeToFile("BobMortimer.txt", tasksList);
                 } else if (instruction.toLowerCase().startsWith("deadline ") || instruction.toLowerCase().startsWith("deadline")) {
                     String cut = instruction.substring(9).trim();
                     int by = cut.indexOf("/by");
@@ -88,6 +91,7 @@ public class BobMortimer {
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
                     taskNo++;
+                    writeToFile("BobMortimer.txt", tasksList);
                 } else if (instruction.toLowerCase().startsWith("event ") || instruction.toLowerCase().startsWith("event")) {
                     String cut = instruction.substring(6).trim();
                     int from = cut.indexOf("/from");
@@ -100,6 +104,7 @@ public class BobMortimer {
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
                     taskNo++;
+                    writeToFile("BobMortimer.txt", tasksList);
                 } else if (instruction.matches("(?i)^delete\\s+\\d+$")) {
                     int n = Integer.parseInt(instruction.trim().split("\\s+")[1]);
                     if (n < 1 || n > taskNo) {
@@ -109,10 +114,11 @@ public class BobMortimer {
                             + "\nNow you have " + (taskNo - 1) + " tasks in the list\n" + LINE);
                     tasksList.remove(n-1);
                     taskNo--;
+                    writeToFile("BobMortimer.txt", tasksList);
                 } else {
                     throw new BobException("wot?");
                 }
-            } catch (BobException e) {
+            } catch (BobException | IOException e) {
                 System.out.println("\n" + LINE + "\n" + "  " + e.getMessage() + "\n" + LINE);
             }
         }
@@ -171,6 +177,14 @@ public class BobMortimer {
             }
             tasksList.add(task);
         }
+    }
+
+    private static void writeToFile(String filePath, ArrayList<Task> tasksList) throws IOException {
+        FileWriter fw = new FileWriter(filePath);
+        for (int i = 0; i < tasksList.size(); i++) {
+            fw.write(tasksList.get(i).toString() + System.lineSeparator());
+        }
+        fw.close();
     }
 
 }
