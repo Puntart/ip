@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -21,6 +23,7 @@ public class BobMortimer {
         Scanner userInput = new Scanner(System.in);
         ArrayList<Task> tasksList = new ArrayList<>(100);
         int taskNo = 0;
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
         //Greeting
@@ -85,8 +88,9 @@ public class BobMortimer {
                     String cut = instruction.substring(9).trim();
                     int by = cut.indexOf("/by");
                     String description = cut.substring(0, by).trim();
-                    String deadline = cut.substring(by + 3).trim();
-                    TaskDeadline task = new TaskDeadline(description, deadline);
+                    String deadlineString = cut.substring(by + 3).trim();
+                    LocalDate deadlineDate = LocalDate.parse(deadlineString, dateFormat);
+                    TaskDeadline task = new TaskDeadline(description, deadlineDate);
                     tasksList.add(task);
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
@@ -97,8 +101,10 @@ public class BobMortimer {
                     int from = cut.indexOf("/from");
                     int to = cut.indexOf("/to", from + 1);
                     String description = cut.substring(0, from).trim();
-                    String startDate = cut.substring(from + 5, to).trim();
-                    String endDate = cut.substring(to + 3).trim();
+                    String startDateString = cut.substring(from + 5, to).trim();
+                    String endDateString = cut.substring(to + 3).trim();
+                    LocalDate startDate = LocalDate.parse(startDateString, dateFormat);
+                    LocalDate endDate = LocalDate.parse(endDateString, dateFormat);
                     TaskEvent task = new TaskEvent(description, startDate, endDate);
                     tasksList.add(task);
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
@@ -131,6 +137,7 @@ public class BobMortimer {
     private static void readFileTasks(String filePath, ArrayList<Task> tasksList) throws FileNotFoundException {
         File f = new File(filePath); // create a File for the given file path
         Scanner s = new Scanner(f); // create a Scanner using the File as the source
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
         Pattern header = Pattern.compile("^\\[(T|D|E)\\]\\[(X| )\\]\\s+(.*)$");
         Pattern pDeadline = Pattern.compile("^(.*)\\s*\\(by:\\s*(.*)\\)\\s*$", Pattern.CASE_INSENSITIVE);
@@ -155,20 +162,23 @@ public class BobMortimer {
             } else if(taskType.equals("D")) {
                 Matcher mDeadline = pDeadline.matcher(rest);
                 if (mDeadline.matches()) {
-                    task = new TaskDeadline(mDeadline.group(1).trim(), mDeadline.group(2).trim());
+                    LocalDate deadlineDate = LocalDate.parse(mDeadline.group(2).trim(), dateFormat);
+                    task = new TaskDeadline(mDeadline.group(1).trim(), deadlineDate);
                 } else {
-                    // fallback if "(by: ...)" is missing
-                    task = new TaskDeadline(rest, "");
+                    System.err.println("Skipping unparsable deadline: " + rest);
+                    continue;
                 }
             } else if(taskType.equals("E")) {
                 Matcher mEvent = pEvent.matcher(rest);
                 if (mEvent.matches()) {
+                    LocalDate startDate = LocalDate.parse(mEvent.group(2).trim(), dateFormat);
+                    LocalDate endDate = LocalDate.parse(mEvent.group(3).trim(), dateFormat);
                     task = new TaskEvent(mEvent.group(1).trim(),
-                            mEvent.group(2).trim(),
-                            mEvent.group(3).trim());
+                            startDate,
+                            endDate);
                 } else {
-                    // fallback if "(from: ... to: ...)" is missing
-                    task = new TaskEvent(rest, "", "");
+                    System.err.println("Skipping unparsable event: " + rest);
+                    continue;
                 }
             }
 
