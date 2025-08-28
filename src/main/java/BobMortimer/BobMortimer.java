@@ -9,6 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * main class of BobMortimer
+ */
 public class BobMortimer {
 
     private Storage storage;
@@ -17,6 +20,11 @@ public class BobMortimer {
     private Parser parser;
     private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    /**
+     * Constructor of BobMortimer
+     *
+     * @param filePath the file path to load tasks from and save tasks to
+     */
     public BobMortimer(String filePath) {
         this.ui = new UI();
         this.parser = new Parser();
@@ -31,6 +39,12 @@ public class BobMortimer {
         }
     }
 
+    /**
+     * method to run the program
+     *
+     * @throws BobException  if user input is invalid, such as invalid task number or missing arguments
+     * @throws IOException   if there is an error writing tasks to the storage file
+     */
     public void run() {
 
         String logo = " ____      ___     ____        __  __     ___     ____     _____    _____   __  __    _____    ____    \n" +
@@ -124,6 +138,11 @@ public class BobMortimer {
         ui.showBye(LINE);
     }
 
+    /**
+     * main method
+     *
+     * @param args the command-line arguments, unused in this application
+     */
     public static void main(String[] args) {
         new BobMortimer("BobMortimer.txt").run();
     }
