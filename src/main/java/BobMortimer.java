@@ -11,12 +11,26 @@ import java.util.Scanner;
 public class BobMortimer {
 
     private Storage storage;
-    private TaskList taskList;
+    private TaskList tasksList;
     private UI ui;
     private Parser parser;
+    private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    public BobMortimer(String filePath) {
+        this.ui = new UI();
+        this.parser = new Parser();
+        this.storage = new Storage(filePath);
+        //Reading from file
+        try {
+            ArrayList<Task> tasksListLoad = storage.load();
+            this.tasksList = new TaskList(tasksListLoad);
+        } catch (FileNotFoundException e) {
+            System.out.println("File does not exist or File not found");
+            this.tasksList = new TaskList(new ArrayList<>(100));
+        }
+    }
 
-    public static void main(String[] args) {
+    public void run() {
 
         String logo = " ____      ___     ____        __  __     ___     ____     _____    _____   __  __    _____    ____    \n" +
                 "| __ )    / _ \\   | __ )       |  \\/  |   / _ \\   |  _ \\   |_   _|    ___    |  \\/  |  | ____|  |  _ \\   \n" +
@@ -26,56 +40,40 @@ public class BobMortimer {
         String LINE = "____________________________________________________________";
         Scanner userInput = new Scanner(System.in);
         ArrayList<Task> tasksListLoad = new ArrayList<>(100);
-        TaskList tasksList;
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        Storage storage = new Storage("BobMortimer.txt");
-
 
         //Greeting
-        System.out.println(LINE + "\n" +
-                "Hello I'm\n" + logo
-                + "\nWhat can I do for you?\n"
-                + LINE + "\n");
-
-        //Reading From File
-        try {
-            tasksListLoad = storage.load();
-        } catch (FileNotFoundException e) {
-            System.out.println("File does not exist or File not found");
-        }
-        tasksList = new TaskList(tasksListLoad);
+        ui.showGreeting(LINE, logo);
 
         //User input
         while (true) {
             try {
                 String instruction = userInput.nextLine();
-                if (instruction.equals("bye")) { //bye
+                Parser.Result cmd = parser.parse(instruction);
+                if (cmd.type == Parser.Type.BYE) { //bye
                     break;
-                } else if (instruction.equals("list")) { //list
-                    System.out.println("\n" + LINE + "\n" + "Here you go:\n");
+                } else if (cmd.type == Parser.Type.LIST) { //list
+                    ui.showListHeader(LINE);
                     for (int i = 0; i < tasksList.size(); i++) {
                         System.out.print((i + 1) + ". " + tasksList.get(i).toString() + "\n");
                     }
-                    System.out.println(LINE + "\n");
-                } else if (instruction.matches("^mark\\s+\\d+$")) {  //mark
-                    System.out.println("\n" + LINE + "\n" + "Nice! It's done!:\n");
+                    ui.showListFooter(LINE);
+                } else if (cmd.type == Parser.Type.MARK) {  //mark
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
                     if (n < 1 || n > tasksList.size()) {
                         throw new BobException("Invalid task number!");
                     }
                     tasksList.mark(n-1);
-                    System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
+                    ui.showMark(LINE, tasksList.get(n-1));
                     storage.save(tasksList.getTasksList());
-                } else if (instruction.matches("^unmark\\s+\\d+$")) {  //unmark
-                    System.out.println("\n" + LINE + "\n" + "OK, not done!:\n");
+                } else if (cmd.type == Parser.Type.UNMARK) {  //unmark
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
                     if (n < 1 || n > tasksList.size()) {
                         throw new BobException("Invalid task number!");
                     }
                     tasksList.unmark(n-1);
-                    System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
+                    ui.showUnmark(LINE, tasksList.get(n-1));
                     storage.save(tasksList.getTasksList());
-                } else if (instruction.toLowerCase().startsWith("todo ") || instruction.toLowerCase().startsWith("todo")) {
+                } else if (cmd.type == Parser.Type.TODO) {
                     if (instruction.length() == 4) {
                         throw new BobException("OOPS!!! The description of a todo cannot be empty.");
                     }
@@ -85,41 +83,32 @@ public class BobMortimer {
                     }
                     TaskToDo task = new TaskToDo(description);
                     tasksList.add(task);
-                    System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
-                            + "\nNow you have " + (tasksList.size()) + " tasks in the list\n" + LINE);
+                    ui.showAdded(LINE, task, tasksList.size());
                     storage.save(tasksList.getTasksList());
-                } else if (instruction.toLowerCase().startsWith("deadline ") || instruction.toLowerCase().startsWith("deadline")) {
-                    String cut = instruction.substring(9).trim();
-                    int by = cut.indexOf("/by");
-                    String description = cut.substring(0, by).trim();
-                    String deadlineString = cut.substring(by + 3).trim();
+                } else if (cmd.type == Parser.Type.DEADLINE) {
+                    String description = cmd.args[0];
+                    String deadlineString = cmd.args[1];
                     LocalDate deadlineDate = LocalDate.parse(deadlineString, dateFormat);
                     TaskDeadline task = new TaskDeadline(description, deadlineDate);
                     tasksList.add(task);
-                    System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
-                            + "\nNow you have " + (tasksList.size()) + " tasks in the list\n" + LINE);
+                    ui.showAdded(LINE, task, tasksList.size());
                     storage.save(tasksList.getTasksList());
-                } else if (instruction.toLowerCase().startsWith("event ") || instruction.toLowerCase().startsWith("event")) {
-                    String cut = instruction.substring(6).trim();
-                    int from = cut.indexOf("/from");
-                    int to = cut.indexOf("/to", from + 1);
-                    String description = cut.substring(0, from).trim();
-                    String startDateString = cut.substring(from + 5, to).trim();
-                    String endDateString = cut.substring(to + 3).trim();
+                } else if (cmd.type == Parser.Type.EVENT) {
+                    String description = cmd.args[0];
+                    String startDateString = cmd.args[1];
+                    String endDateString = cmd.args[2];
                     LocalDate startDate = LocalDate.parse(startDateString, dateFormat);
                     LocalDate endDate = LocalDate.parse(endDateString, dateFormat);
                     TaskEvent task = new TaskEvent(description, startDate, endDate);
                     tasksList.add(task);
-                    System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
-                            + "\nNow you have " + (tasksList.size()) + " tasks in the list\n" + LINE);
+                    ui.showAdded(LINE, task, tasksList.size());
                     storage.save(tasksList.getTasksList());
-                } else if (instruction.matches("(?i)^delete\\s+\\d+$")) {
+                } else if (cmd.type == Parser.Type.DELETE) {
                     int n = Integer.parseInt(instruction.trim().split("\\s+")[1]);
                     if (n < 1 || n > tasksList.size()) {
                         throw new BobException("Invalid task number!");
                     }
-                    System.out.println("\n" + LINE + "\n" + "Ok, I have removed the task:\n" + tasksList.get(n-1).toString()
-                            + "\nNow you have " + (tasksList.size() - 1) + " tasks in the list\n" + LINE);
+                    ui.showDeleted(LINE, tasksList.get(n-1), tasksList.size() - 1);
                     tasksList.remove(n-1);
                     storage.save(tasksList.getTasksList());
                 } else {
@@ -131,8 +120,11 @@ public class BobMortimer {
         }
 
         //exit
-        System.out.println("Bye. Hope to see you again soon!\n"
-                        + LINE);
+        ui.showBye(LINE);
+    }
+
+    public static void main(String[] args) {
+        new BobMortimer("BobMortimer.txt").run();
     }
 
 }
