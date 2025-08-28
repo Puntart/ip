@@ -13,7 +13,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BobMortimer {
+
+    private Storage storage;
+    private TaskList taskList;
+    private UI ui;
+    private Parser parser;
+
+
     public static void main(String[] args) {
+
         String logo = " ____      ___     ____        __  __     ___     ____     _____    _____   __  __    _____    ____    \n" +
                 "| __ )    / _ \\   | __ )       |  \\/  |   / _ \\   |  _ \\   |_   _|    ___    |  \\/  |  | ____|  |  _ \\   \n" +
                 "|  _ \\   | | | |  |  _ \\       | |\\/| |  | | | |  | |_) |    | |      | |    | |\\/| |  |  _|    | |_) |  \n" +
