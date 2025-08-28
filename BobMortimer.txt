@@ -2,4 +2,3 @@
 [D][ ] return book (by: Oct 15 2019)
 [E][ ] project meeting (from: Jun 06 2015 to: Jun 07 2015)
 [D][ ] eat meat (by: Jan 04 2025)
-[D][ ] eat veggies (by: Oct 15 2020)

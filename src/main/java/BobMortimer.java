@@ -32,6 +32,7 @@ public class BobMortimer {
         ArrayList<Task> tasksList = new ArrayList<>(100);
         int taskNo = 0;
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Storage storage = new Storage("BobMortimer.txt");
 
 
         //Greeting
@@ -42,11 +43,11 @@ public class BobMortimer {
 
         //Reading From File
         try {
-            readFileTasks("BobMortimer.txt", tasksList);
-            taskNo = tasksList.size();
+            tasksList = storage.load();
         } catch (FileNotFoundException e) {
             System.out.println("File does not exist or File not found");
         }
+        taskNo = tasksList.size();
 
         //User input
         while (true) {
@@ -68,7 +69,7 @@ public class BobMortimer {
                     }
                     tasksList.get(n-1).markAsDone();
                     System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
-                    writeToFile("BobMortimer.txt", tasksList);
+                    storage.save(tasksList);
                 } else if (instruction.matches("^unmark\\s+\\d+$")) {  //unmark
                     System.out.println("\n" + LINE + "\n" + "OK, not done!:\n");
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
@@ -77,7 +78,7 @@ public class BobMortimer {
                     }
                     tasksList.get(n-1).markUndone();
                     System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
-                    writeToFile("BobMortimer.txt", tasksList);
+                    storage.save(tasksList);
                 } else if (instruction.toLowerCase().startsWith("todo ") || instruction.toLowerCase().startsWith("todo")) {
                     if (instruction.length() == 4) {
                         throw new BobException("OOPS!!! The description of a todo cannot be empty.");
@@ -91,7 +92,7 @@ public class BobMortimer {
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
                     taskNo++;
-                    writeToFile("BobMortimer.txt", tasksList);
+                    storage.save(tasksList);
                 } else if (instruction.toLowerCase().startsWith("deadline ") || instruction.toLowerCase().startsWith("deadline")) {
                     String cut = instruction.substring(9).trim();
                     int by = cut.indexOf("/by");
@@ -103,7 +104,7 @@ public class BobMortimer {
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
                     taskNo++;
-                    writeToFile("BobMortimer.txt", tasksList);
+                    storage.save(tasksList);
                 } else if (instruction.toLowerCase().startsWith("event ") || instruction.toLowerCase().startsWith("event")) {
                     String cut = instruction.substring(6).trim();
                     int from = cut.indexOf("/from");
@@ -118,7 +119,7 @@ public class BobMortimer {
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
                             + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
                     taskNo++;
-                    writeToFile("BobMortimer.txt", tasksList);
+                    storage.save(tasksList);
                 } else if (instruction.matches("(?i)^delete\\s+\\d+$")) {
                     int n = Integer.parseInt(instruction.trim().split("\\s+")[1]);
                     if (n < 1 || n > taskNo) {
@@ -128,7 +129,7 @@ public class BobMortimer {
                             + "\nNow you have " + (taskNo - 1) + " tasks in the list\n" + LINE);
                     tasksList.remove(n-1);
                     taskNo--;
-                    writeToFile("BobMortimer.txt", tasksList);
+                    storage.save(tasksList);
                 } else {
                     throw new BobException("wot?");
                 }
@@ -140,69 +141,6 @@ public class BobMortimer {
         //exit
         System.out.println("Bye. Hope to see you again soon!\n"
                         + LINE);
-    }
-
-    private static void readFileTasks(String filePath, ArrayList<Task> tasksList) throws FileNotFoundException {
-        File f = new File(filePath); // create a File for the given file path
-        Scanner s = new Scanner(f); // create a Scanner using the File as the source
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
-
-        Pattern header = Pattern.compile("^\\[(T|D|E)\\]\\[(X| )\\]\\s+(.*)$");
-        Pattern pDeadline = Pattern.compile("^(.*)\\s*\\(by:\\s*(.*)\\)\\s*$", Pattern.CASE_INSENSITIVE);
-        Pattern pEvent = Pattern.compile("^(.*)\\s*\\(from:\\s*(.*?)\\s+to:\\s*(.*?)\\)\\s*$",
-                Pattern.CASE_INSENSITIVE);
-
-        while (s.hasNext()) {
-            String line = s.nextLine().trim();
-            Matcher match = header.matcher(line);
-            if (!match.matches()) {
-                System.err.println("Skipping unparsable line: " + line);
-                continue;
-            }
-
-            String taskType = match.group(1);
-            boolean isDone = match.group(2).equals("X");
-            String rest = match.group(3).trim();
-
-            Task task = null;
-            if(taskType.equals("T")) {
-                task = new TaskToDo(rest);
-            } else if(taskType.equals("D")) {
-                Matcher mDeadline = pDeadline.matcher(rest);
-                if (mDeadline.matches()) {
-                    LocalDate deadlineDate = LocalDate.parse(mDeadline.group(2).trim(), dateFormat);
-                    task = new TaskDeadline(mDeadline.group(1).trim(), deadlineDate);
-                } else {
-                    System.err.println("Skipping unparsable deadline: " + rest);
-                    continue;
-                }
-            } else if(taskType.equals("E")) {
-                Matcher mEvent = pEvent.matcher(rest);
-                if (mEvent.matches()) {
-                    LocalDate startDate = LocalDate.parse(mEvent.group(2).trim(), dateFormat);
-                    LocalDate endDate = LocalDate.parse(mEvent.group(3).trim(), dateFormat);
-                    task = new TaskEvent(mEvent.group(1).trim(),
-                            startDate,
-                            endDate);
-                } else {
-                    System.err.println("Skipping unparsable event: " + rest);
-                    continue;
-                }
-            }
-
-            if (isDone) {
-                task.markAsDone();
-            }
-            tasksList.add(task);
-        }
-    }
-
-    private static void writeToFile(String filePath, ArrayList<Task> tasksList) throws IOException {
-        FileWriter fw = new FileWriter(filePath);
-        for (int i = 0; i < tasksList.size(); i++) {
-            fw.write(tasksList.get(i).toString() + System.lineSeparator());
-        }
-        fw.close();
     }
 
 }
