@@ -1,16 +1,12 @@
 import com.sun.source.util.TaskListener;
 
 import javax.sound.midi.SysexMessage;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class BobMortimer {
 
@@ -29,8 +25,8 @@ public class BobMortimer {
                 "|____/    \\___/   |____/       |_|  |_|   \\___/   |_| \\_\\    |_|      |_|    |_|  |_|  |_____|  |_| \\_\\ :) \n";
         String LINE = "____________________________________________________________";
         Scanner userInput = new Scanner(System.in);
-        ArrayList<Task> tasksList = new ArrayList<>(100);
-        int taskNo = 0;
+        ArrayList<Task> tasksListLoad = new ArrayList<>(100);
+        TaskList tasksList;
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Storage storage = new Storage("BobMortimer.txt");
 
@@ -43,11 +39,11 @@ public class BobMortimer {
 
         //Reading From File
         try {
-            tasksList = storage.load();
+            tasksListLoad = storage.load();
         } catch (FileNotFoundException e) {
             System.out.println("File does not exist or File not found");
         }
-        taskNo = tasksList.size();
+        tasksList = new TaskList(tasksListLoad);
 
         //User input
         while (true) {
@@ -57,28 +53,28 @@ public class BobMortimer {
                     break;
                 } else if (instruction.equals("list")) { //list
                     System.out.println("\n" + LINE + "\n" + "Here you go:\n");
-                    for (int i = 0; i < taskNo; i++) {
+                    for (int i = 0; i < tasksList.size(); i++) {
                         System.out.print((i + 1) + ". " + tasksList.get(i).toString() + "\n");
                     }
                     System.out.println(LINE + "\n");
                 } else if (instruction.matches("^mark\\s+\\d+$")) {  //mark
                     System.out.println("\n" + LINE + "\n" + "Nice! It's done!:\n");
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
-                    if (n < 1 || n > taskNo) {
+                    if (n < 1 || n > tasksList.size()) {
                         throw new BobException("Invalid task number!");
                     }
-                    tasksList.get(n-1).markAsDone();
+                    tasksList.mark(n-1);
                     System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
-                    storage.save(tasksList);
+                    storage.save(tasksList.getTasksList());
                 } else if (instruction.matches("^unmark\\s+\\d+$")) {  //unmark
                     System.out.println("\n" + LINE + "\n" + "OK, not done!:\n");
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
-                    if (n < 1 || n > taskNo) {
+                    if (n < 1 || n > tasksList.size()) {
                         throw new BobException("Invalid task number!");
                     }
-                    tasksList.get(n-1).markUndone();
+                    tasksList.unmark(n-1);
                     System.out.println(tasksList.get(n-1).toString() + "\n" + LINE);
-                    storage.save(tasksList);
+                    storage.save(tasksList.getTasksList());
                 } else if (instruction.toLowerCase().startsWith("todo ") || instruction.toLowerCase().startsWith("todo")) {
                     if (instruction.length() == 4) {
                         throw new BobException("OOPS!!! The description of a todo cannot be empty.");
@@ -90,9 +86,8 @@ public class BobMortimer {
                     TaskToDo task = new TaskToDo(description);
                     tasksList.add(task);
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
-                            + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
-                    taskNo++;
-                    storage.save(tasksList);
+                            + "\nNow you have " + (tasksList.size()) + " tasks in the list\n" + LINE);
+                    storage.save(tasksList.getTasksList());
                 } else if (instruction.toLowerCase().startsWith("deadline ") || instruction.toLowerCase().startsWith("deadline")) {
                     String cut = instruction.substring(9).trim();
                     int by = cut.indexOf("/by");
@@ -102,9 +97,8 @@ public class BobMortimer {
                     TaskDeadline task = new TaskDeadline(description, deadlineDate);
                     tasksList.add(task);
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
-                            + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
-                    taskNo++;
-                    storage.save(tasksList);
+                            + "\nNow you have " + (tasksList.size()) + " tasks in the list\n" + LINE);
+                    storage.save(tasksList.getTasksList());
                 } else if (instruction.toLowerCase().startsWith("event ") || instruction.toLowerCase().startsWith("event")) {
                     String cut = instruction.substring(6).trim();
                     int from = cut.indexOf("/from");
@@ -117,19 +111,17 @@ public class BobMortimer {
                     TaskEvent task = new TaskEvent(description, startDate, endDate);
                     tasksList.add(task);
                     System.out.println("\n" + LINE + "\n" + "Got it. I've added this task:\n" + task.toString()
-                            + "\nNow you have " + (taskNo + 1) + " tasks in the list\n" + LINE);
-                    taskNo++;
-                    storage.save(tasksList);
+                            + "\nNow you have " + (tasksList.size()) + " tasks in the list\n" + LINE);
+                    storage.save(tasksList.getTasksList());
                 } else if (instruction.matches("(?i)^delete\\s+\\d+$")) {
                     int n = Integer.parseInt(instruction.trim().split("\\s+")[1]);
-                    if (n < 1 || n > taskNo) {
+                    if (n < 1 || n > tasksList.size()) {
                         throw new BobException("Invalid task number!");
                     }
                     System.out.println("\n" + LINE + "\n" + "Ok, I have removed the task:\n" + tasksList.get(n-1).toString()
-                            + "\nNow you have " + (taskNo - 1) + " tasks in the list\n" + LINE);
+                            + "\nNow you have " + (tasksList.size() - 1) + " tasks in the list\n" + LINE);
                     tasksList.remove(n-1);
-                    taskNo--;
-                    storage.save(tasksList);
+                    storage.save(tasksList.getTasksList());
                 } else {
                     throw new BobException("wot?");
                 }
