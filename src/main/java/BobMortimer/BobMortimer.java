@@ -33,7 +33,7 @@ public class BobMortimer {
 
     public void run() {
 
-        String logo = " ____      ___     ____        __  __     ___     ____     _____    _____   __  __    _____    ____    \n" +
+        String LOGO = " ____      ___     ____        __  __     ___     ____     _____    _____   __  __    _____    ____    \n" +
                 "| __ )    / _ \\   | __ )       |  \\/  |   / _ \\   |  _ \\   |_   _|    ___    |  \\/  |  | ____|  |  _ \\   \n" +
                 "|  _ \\   | | | |  |  _ \\       | |\\/| |  | | | |  | |_) |    | |      | |    | |\\/| |  |  _|    | |_) |  \n" +
                 "| |_) |  | |_| |  | |_) |      | |  | |  | |_| |  |  _ <     | |      | |    | |  | |  | |___   |  _ <   \n" +
@@ -43,7 +43,7 @@ public class BobMortimer {
         ArrayList<Task> tasksListLoad = new ArrayList<>(100);
 
         //Greeting
-        ui.showGreeting(LINE, logo);
+        ui.showGreeting(LINE, LOGO);
 
         //User input
         while (true) {
