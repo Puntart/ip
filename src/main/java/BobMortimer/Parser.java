@@ -4,7 +4,7 @@ public class Parser {
 
     public Parser() { }
 
-    public enum Type { BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN }
+    public enum Type { BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN, FIND }
 
     private static final java.util.regex.Pattern pDeadline =
             java.util.regex.Pattern.compile("(?i)^deadline\\s+(.*?)\\s*/by\\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*$");
@@ -39,6 +39,10 @@ public class Parser {
 
         if (in.toLowerCase().startsWith("todo"))
             return new Result(Type.TODO, in);
+
+        if (in.toLowerCase().startsWith("find")) {
+            return new Result(Type.FIND, in);
+        }
 
         java.util.regex.Matcher md = pDeadline.matcher(in);
         if (md.matches()) {

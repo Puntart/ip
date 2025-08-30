@@ -22,6 +22,13 @@ public class Task {
         return this.isDone;
     }
 
+    public boolean containsKeyword(String keyword) {
+        if (description.contains(keyword)) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         String status = "";
