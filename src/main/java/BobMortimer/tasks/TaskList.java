@@ -83,6 +83,11 @@ public class TaskList {
         return tasksList;
     }
 
+    /**
+     * Look through the task list to find which tasks contain the keyword
+     *
+     * @return the underlying matchingTaskList containing all tasks that contain keyword
+     */
     public ArrayList<Task> findTasks(String keyword) {
         ArrayList<Task> matchingTaskList = new ArrayList<>();
         for (int i = 0; i < tasksList.size(); i++) {
