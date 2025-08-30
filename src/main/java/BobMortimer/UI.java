@@ -1,5 +1,7 @@
 package BobMortimer;
 
+import java.util.ArrayList;
+
 import BobMortimer.tasks.Task;
 
 public class UI {
@@ -15,13 +17,12 @@ public class UI {
                 + LINE + "\n");
     }
 
-    // List header + footer are printed around the items (items are printed by caller)
-    public void showListHeader(String LINE) {
+    public void showList(String LINE, ArrayList<Task> tasksList) {
         System.out.println("\n" + LINE + "\n" + "Here you go:\n");
-    }
-
-    public void showListFooter(String LINE) {
-        System.out.println(LINE + "\n");
+        for (int i = 0; i < tasksList.size(); i++) {
+            System.out.print((i + 1) + ". " + tasksList.get(i).toString() + "\n");
+        }
+        System.out.println("\n" + LINE + "\n");
     }
 
     public void showMark(String LINE, Task t) {
@@ -42,6 +43,14 @@ public class UI {
     public void showDeleted(String LINE, Task t, int remaining) {
         System.out.println("\n" + LINE + "\n" + "Ok, I have removed the task:\n" + t.toString()
                 + "\nNow you have " + (remaining) + " tasks in the list\n" + LINE);
+    }
+
+    public void showFind(String LINE, ArrayList<Task> matchingTaskList) {
+        System.out.println("\n" + LINE + "\n" + "Here are the matching tasks in your list:\n");
+        for (int i = 0; i < matchingTaskList.size(); i++) {
+            System.out.print((i + 1) + ". " + matchingTaskList.get(i).toString() + "\n");
+        }
+        System.out.println("\n" + LINE + "\n");
     }
 
     public void showError(String LINE, String message) {

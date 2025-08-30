@@ -67,11 +67,7 @@ public class BobMortimer {
                 if (cmd.type == Parser.Type.BYE) { //bye
                     break;
                 } else if (cmd.type == Parser.Type.LIST) { //list
-                    ui.showListHeader(LINE);
-                    for (int i = 0; i < tasksList.size(); i++) {
-                        System.out.print((i + 1) + ". " + tasksList.get(i).toString() + "\n");
-                    }
-                    ui.showListFooter(LINE);
+                    ui.showList(LINE, tasksList.getTasksList());
                 } else if (cmd.type == Parser.Type.MARK) {  //mark
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
                     if (n < 1 || n > tasksList.size()) {
@@ -126,6 +122,14 @@ public class BobMortimer {
                     ui.showDeleted(LINE, tasksList.get(n-1), tasksList.size() - 1);
                     tasksList.remove(n-1);
                     storage.save(tasksList.getTasksList());
+                } else if (cmd.type == Parser.Type.FIND) {
+                    String keyword = instruction.substring(5).trim();
+                    ArrayList<Task> matchingTaskList = new ArrayList<>();
+                    if (keyword.isEmpty()) {
+                        throw new BobException("OOPS!!! The keyword cannot be empty.");
+                    }
+                    matchingTaskList = tasksList.findTasks(keyword);
+                    ui.showFind(LINE, matchingTaskList);
                 } else {
                     throw new BobException("wot?");
                 }

@@ -42,10 +42,17 @@ public class Task {
     }
 
     /**
+     * method to check if task contains keyword
      *
-     * @return the string representation of the task,
-     *         including its completion status and description
+     * @return true if the task contains keyword, false otherwise
      */
+    public boolean containsKeyword(String keyword) {
+        if (description.contains(keyword)) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         String status = "";
