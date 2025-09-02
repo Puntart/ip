@@ -1,7 +1,7 @@
 package BobMortimer.tasks;
 
 /**
- * parent Task class to handle individual tasks
+ * Parent Task class to handle individual tasks.
  */
 public class Task {
 
@@ -9,7 +9,7 @@ public class Task {
     private boolean isDone;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param description the description of the task
      */
@@ -19,21 +19,21 @@ public class Task {
     }
 
     /**
-     * Marks the task as completed
+     * Marks the task as completed.
      */
     public void markAsDone() {
         this.isDone = true;
     }
 
     /**
-     * Marks the task as not completed
+     * Marks the task as not completed.
      */
     public void markUndone() {
         this.isDone = false;
     }
 
     /**
-     * getter method for isDone
+     * Getter method for isDone.
      *
      * @return true if the task is completed, false otherwise
      */
@@ -42,7 +42,7 @@ public class Task {
     }
 
     /**
-     * method to check if task contains keyword
+     * Method to check if task contains keyword.
      *
      * @return true if the task contains keyword, false otherwise
      */

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Subclass of Task for Event Tasks
+ * Subclass of Task for Event Tasks.
  */
 public class TaskEvent extends Task {
 
@@ -13,7 +13,7 @@ public class TaskEvent extends Task {
     DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param description the description of the event task
      * @param startDate   the start date of the event

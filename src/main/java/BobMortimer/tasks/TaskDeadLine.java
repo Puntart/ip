@@ -4,20 +4,20 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Subclass of Task for Deadline Tasks
+ * Subclass of Task for Deadline Tasks.
  */
-public class TaskDeadline extends Task {
+public class TaskDeadLine extends Task {
 
     private LocalDate deadline;
     DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param description the description of the deadline task
      * @param deadline the date by which the task should be completed
      */
-    public TaskDeadline(String description, LocalDate deadline) {
+    public TaskDeadLine(String description, LocalDate deadline) {
         super(description);
         this.deadline = deadline;
     }

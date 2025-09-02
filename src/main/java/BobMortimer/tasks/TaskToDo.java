@@ -1,12 +1,12 @@
 package BobMortimer.tasks;
 
 /**
- * Subclass of task for ToDo Tasks
+ * Subclass of task for ToDo Tasks.
  */
 public class TaskToDo extends Task {
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param description the description of the todo task
      */
@@ -15,7 +15,6 @@ public class TaskToDo extends Task {
     }
 
     /**
-     * [insert explanation here]
      *
      * @return a string representation of the todo task,
      *         including its type, completion status, and description

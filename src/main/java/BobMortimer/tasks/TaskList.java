@@ -3,14 +3,14 @@ package BobMortimer.tasks;
 import java.util.ArrayList;
 
 /**
- * Class containing the task list
+ * Class containing the task list.
  */
 public class TaskList {
 
     private ArrayList<Task> tasksList = new ArrayList<>();
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param tasksList the initial list of tasks to store in this TaskList
      */
@@ -19,7 +19,7 @@ public class TaskList {
     }
 
     /**
-     * Method to return the size of the task list
+     * Method to return the size of the task list.
      *
      * @return the number of tasks currently in the list
      */
@@ -28,7 +28,7 @@ public class TaskList {
     }
 
     /**
-     * Getter to retrive tasks in the list according to their index
+     * Getter to retrive tasks in the list according to their index.
      *
      * @param index the index of the task to retrieve
      * @return the Task at the specified index
@@ -38,7 +38,7 @@ public class TaskList {
     }
 
     /**
-     * Add task to the task list
+     * Add task to the task list.
      *
      * @param t the Task to add to the list
      */
@@ -47,7 +47,7 @@ public class TaskList {
     }
 
     /**
-     * Remove a task from the task list according to their index
+     * Remove a task from the task list according to their index.
      *
      * @param index the index of the Task to remove
      * @return the Task that was removed
@@ -57,7 +57,7 @@ public class TaskList {
     }
 
     /**
-     * Mark the task according to the index
+     * Mark the task according to the index.
      *
      * @param index the index of the Task to mark as done
      */
@@ -66,7 +66,7 @@ public class TaskList {
     }
 
     /**
-     * Unmark the task according to the index
+     * Unmark the task according to the index.
      *
      * @param index the index of the Task to mark as not done
      */
@@ -75,7 +75,7 @@ public class TaskList {
     }
 
     /**
-     * Getter method for the task list
+     * Getter method for the task list.
      *
      * @return the underlying ArrayList containing all tasks
      */
@@ -84,7 +84,7 @@ public class TaskList {
     }
 
     /**
-     * Look through the task list to find which tasks contain the keyword
+     * Look through the task list to find which tasks contain the keyword.
      *
      * @return the underlying matchingTaskList containing all tasks that contain keyword
      */

@@ -1,7 +1,7 @@
 package BobMortimer;
 
 import BobMortimer.tasks.Task;
-import BobMortimer.tasks.TaskDeadline;
+import BobMortimer.tasks.TaskDeadLine;
 import BobMortimer.tasks.TaskEvent;
 import BobMortimer.tasks.TaskToDo;
 
@@ -55,7 +55,7 @@ public class Storage {
                 Matcher mDeadline = pDeadline.matcher(rest);
                 if (mDeadline.matches()) {
                     LocalDate deadlineDate = LocalDate.parse(mDeadline.group(2).trim(), dateFormat);
-                    task = new TaskDeadline(mDeadline.group(1).trim(), deadlineDate);
+                    task = new TaskDeadLine(mDeadline.group(1).trim(), deadlineDate);
                 } else {
                     System.err.println("Skipping unparsable deadline: " + rest);
                     continue;
