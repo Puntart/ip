@@ -10,7 +10,7 @@ public class TaskEvent extends Task {
 
     private LocalDate startDate;
     private LocalDate endDate;
-    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
+    private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     /**
      * Constructor.
@@ -26,7 +26,6 @@ public class TaskEvent extends Task {
     }
 
     /**
-     *
      * @return a string representation of the event task,
      *         including its type, completion status, description, start date, and end date
      */

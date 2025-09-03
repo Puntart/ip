@@ -1,8 +1,8 @@
 package BobMortimer.tasks;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class TaskTest {
 
@@ -10,7 +10,7 @@ public class TaskTest {
     public void markTaskTest() {
         Task task = new TaskToDo("Testing");
         task.markAsDone();
-        assertEquals(true,task.getisDone());
+        assertEquals(true, task.getisDone());
     }
 
     @Test

@@ -15,7 +15,6 @@ public class TaskToDo extends Task {
     }
 
     /**
-     *
      * @return a string representation of the todo task,
      *         including its type, completion status, and description
      */

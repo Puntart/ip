@@ -1,13 +1,18 @@
 package BobMortimer;
 
-import BobMortimer.tasks.*;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import BobMortimer.tasks.Task;
+import BobMortimer.tasks.TaskDeadLine;
+import BobMortimer.tasks.TaskEvent;
+import BobMortimer.tasks.TaskList;
+import BobMortimer.tasks.TaskToDo;
+
 
 /**
  * Main class of BobMortimer.
@@ -47,7 +52,7 @@ public class BobMortimer {
      */
     public void run() {
 
-        String LINE = "____________________________________________________________";
+        String line = "____________________________________________________________";
         Scanner userInput = new Scanner(System.in);
         ArrayList<Task> tasksListLoad = new ArrayList<>(100);
 
@@ -63,21 +68,21 @@ public class BobMortimer {
                     break;
                 } else if (cmd.type == Parser.Type.LIST) { //list
                     ui.showList(tasksList.getTasksList());
-                } else if (cmd.type == Parser.Type.MARK) {  //mark
+                } else if (cmd.type == Parser.Type.MARK) { //mark
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
                     if (n < 1 || n > tasksList.size()) {
                         throw new BobException("Invalid task number!");
                     }
-                    tasksList.mark(n-1);
-                    ui.showMark(tasksList.get(n-1));
+                    tasksList.mark(n - 1);
+                    ui.showMark(tasksList.get(n - 1));
                     storage.save(tasksList.getTasksList());
-                } else if (cmd.type == Parser.Type.UNMARK) {  //unmark
+                } else if (cmd.type == Parser.Type.UNMARK) { //unmark
                     int n = Integer.parseInt(instruction.split("\\s+")[1]);
                     if (n < 1 || n > tasksList.size()) {
                         throw new BobException("Invalid task number!");
                     }
-                    tasksList.unmark(n-1);
-                    ui.showUnmark(tasksList.get(n-1));
+                    tasksList.unmark(n - 1);
+                    ui.showUnmark(tasksList.get(n - 1));
                     storage.save(tasksList.getTasksList());
                 } else if (cmd.type == Parser.Type.TODO) {
                     if (instruction.length() == 4) {
@@ -114,8 +119,8 @@ public class BobMortimer {
                     if (n < 1 || n > tasksList.size()) {
                         throw new BobException("Invalid task number!");
                     }
-                    ui.showDeleted(tasksList.get(n-1), tasksList.size() - 1);
-                    tasksList.remove(n-1);
+                    ui.showDeleted(tasksList.get(n - 1), tasksList.size() - 1);
+                    tasksList.remove(n - 1);
                     storage.save(tasksList.getTasksList());
                 } else if (cmd.type == Parser.Type.FIND) {
                     String keyword = instruction.substring(5).trim();
@@ -129,7 +134,7 @@ public class BobMortimer {
                     throw new BobException("wot?");
                 }
             } catch (BobException | IOException e) {
-                System.out.println("\n" + LINE + "\n" + "  " + e.getMessage() + "\n" + LINE);
+                System.out.println("\n" + line + "\n" + "  " + e.getMessage() + "\n" + line);
             }
         }
 

@@ -58,8 +58,7 @@ public class Task {
         String status = "";
         if (isDone == true) {
             status = "[X] ";
-        }
-        else if (isDone == false) {
+        } else if (isDone == false) {
             status = "[ ] ";
         }
         return status + description;

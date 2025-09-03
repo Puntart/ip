@@ -2,16 +2,16 @@ package BobMortimer;
 
 public class Parser {
 
-    public Parser() { }
-
-    public enum Type { BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN, FIND }
-
     private static final java.util.regex.Pattern pDeadline =
             java.util.regex.Pattern.compile("(?i)^deadline\\s+(.*?)\\s*/by\\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*$");
 
     private static final java.util.regex.Pattern pEvent =
-            java.util.regex.Pattern.compile("(?i)^event\\s+(.*?)\\s*/from\\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*/to\\s+" +
-                    "([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*$");
+            java.util.regex.Pattern.compile("(?i)^event\\s+(.*?)\\s*/from\\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*/to\\s+"
+                    + "([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*$");
+
+    public Parser() { }
+
+    public enum Type { BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN, FIND }
 
     public static class Result {
         public Type type;
@@ -25,20 +25,28 @@ public class Parser {
     public Result parse(String input) {
         String in = input.trim();
 
-        if (in.equals("bye"))  return new Result(Type.BYE);
-        if (in.equals("list")) return new Result(Type.LIST);
+        if (in.equals("bye")) {
+            return new Result(Type.BYE);
+        }
+        if (in.equals("list")) {
+            return new Result(Type.LIST);
+        }
 
-        if (in.matches("^mark\\s+\\d+$"))
+        if (in.matches("^mark\\s+\\d+$")) {
             return new Result(Type.MARK, in.split("\\s+")[1]);
+        }
 
-        if (in.matches("^unmark\\s+\\d+$"))
+        if (in.matches("^unmark\\s+\\d+$")) {
             return new Result(Type.UNMARK, in.split("\\s+")[1]);
+        }
 
-        if (in.matches("(?i)^delete\\s+\\d+$"))
+        if (in.matches("(?i)^delete\\s+\\d+$")) {
             return new Result(Type.DELETE, in.trim().split("\\s+")[1]);
+        }
 
-        if (in.toLowerCase().startsWith("todo"))
+        if (in.toLowerCase().startsWith("todo")) {
             return new Result(Type.TODO, in);
+        }
 
         if (in.toLowerCase().startsWith("find")) {
             return new Result(Type.FIND, in);

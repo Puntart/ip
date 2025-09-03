@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 public class TaskDeadLine extends Task {
 
     private LocalDate deadline;
-    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
+    private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     /**
      * Constructor.
@@ -23,7 +23,6 @@ public class TaskDeadLine extends Task {
     }
 
     /**
-     *
      * @return a string representation of the deadline task,
      *         including its type, completion status, description, and deadline date
      */

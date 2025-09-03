@@ -1,10 +1,5 @@
 package BobMortimer;
 
-import BobMortimer.tasks.Task;
-import BobMortimer.tasks.TaskDeadLine;
-import BobMortimer.tasks.TaskEvent;
-import BobMortimer.tasks.TaskToDo;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -16,14 +11,20 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import BobMortimer.tasks.Task;
+import BobMortimer.tasks.TaskDeadLine;
+import BobMortimer.tasks.TaskEvent;
+import BobMortimer.tasks.TaskToDo;
+
+
 public class Storage {
 
     private String filePath;
     private DateTimeFormatter dateFormat;
 
-    Pattern header = Pattern.compile("^\\[(T|D|E)\\]\\[(X| )\\]\\s+(.*)$");
-    Pattern pDeadline = Pattern.compile("^(.*)\\s*\\(by:\\s*(.*)\\)\\s*$", Pattern.CASE_INSENSITIVE);
-    Pattern pEvent = Pattern.compile("^(.*)\\s*\\(from:\\s*(.*?)\\s+to:\\s*(.*?)\\)\\s*$",
+    private Pattern header = Pattern.compile("^\\[(T|D|E)\\]\\[(X| )\\]\\s+(.*)$");
+    private Pattern pDeadline = Pattern.compile("^(.*)\\s*\\(by:\\s*(.*)\\)\\s*$", Pattern.CASE_INSENSITIVE);
+    private Pattern pEvent = Pattern.compile("^(.*)\\s*\\(from:\\s*(.*?)\\s+to:\\s*(.*?)\\)\\s*$",
             Pattern.CASE_INSENSITIVE);
 
     public Storage(String filePath) {
@@ -49,9 +50,9 @@ public class Storage {
             String rest = match.group(3).trim();
 
             Task task = null;
-            if(taskType.equals("T")) {
+            if (taskType.equals("T")) {
                 task = new TaskToDo(rest);
-            } else if(taskType.equals("D")) {
+            } else if (taskType.equals("D")) {
                 Matcher mDeadline = pDeadline.matcher(rest);
                 if (mDeadline.matches()) {
                     LocalDate deadlineDate = LocalDate.parse(mDeadline.group(2).trim(), dateFormat);
@@ -60,7 +61,7 @@ public class Storage {
                     System.err.println("Skipping unparsable deadline: " + rest);
                     continue;
                 }
-            } else if(taskType.equals("E")) {
+            } else if (taskType.equals("E")) {
                 Matcher mEvent = pEvent.matcher(rest);
                 if (mEvent.matches()) {
                     LocalDate startDate = LocalDate.parse(mEvent.group(2).trim(), dateFormat);
