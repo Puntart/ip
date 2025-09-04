@@ -37,7 +37,7 @@ public class Task {
      *
      * @return true if the task is completed, false otherwise
      */
-    public boolean getisDone() {
+    public boolean getIsDone() {
         return this.isDone;
     }
 
