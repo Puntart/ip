@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import BobMortimer.gui.Ui;
 import BobMortimer.tasks.Task;
 import BobMortimer.tasks.TaskDeadLine;
 import BobMortimer.tasks.TaskEvent;
