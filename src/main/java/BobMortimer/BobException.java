@@ -1,5 +1,7 @@
 package BobMortimer;
 
-public class BobException extends Exception{
-    BobException(String msg) {super(msg);}
+public class BobException extends Exception {
+    BobException(String msg) {
+        super(msg);
+    }
 }
