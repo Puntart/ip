@@ -2,10 +2,10 @@ package BobMortimer;
 
 public class Parser {
 
-    private static final java.util.regex.Pattern pDeadline =
+    private static final java.util.regex.Pattern deadlinePattern =
             java.util.regex.Pattern.compile("(?i)^deadline\\s+(.*?)\\s*/by\\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*$");
 
-    private static final java.util.regex.Pattern pEvent =
+    private static final java.util.regex.Pattern eventPattern =
             java.util.regex.Pattern.compile("(?i)^event\\s+(.*?)\\s*/from\\s+([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*/to\\s+"
                     + "([0-9]{4}-[0-9]{2}-[0-9]{2})\\s*$");
 
@@ -52,18 +52,18 @@ public class Parser {
             return new Result(Type.FIND, in);
         }
 
-        java.util.regex.Matcher md = pDeadline.matcher(in);
-        if (md.matches()) {
-            String description = md.group(1).trim();
-            String deadline = md.group(2).trim();
+        java.util.regex.Matcher deadlineMatcher = deadlinePattern.matcher(in);
+        if (deadlineMatcher.matches()) {
+            String description = deadlineMatcher.group(1).trim();
+            String deadline = deadlineMatcher.group(2).trim();
             return new Result(Type.DEADLINE, description, deadline);
         }
 
-        java.util.regex.Matcher me = pEvent.matcher(in);
-        if (me.matches()) {
-            String description = me.group(1).trim();
-            String startDate = me.group(2).trim();
-            String endDate = me.group(3).trim();
+        java.util.regex.Matcher eventMatcher = eventPattern.matcher(in);
+        if (eventMatcher.matches()) {
+            String description = eventMatcher.group(1).trim();
+            String startDate = eventMatcher.group(2).trim();
+            String endDate = eventMatcher.group(3).trim();
             return new Result(Type.EVENT, description, startDate, endDate);
         }
 
