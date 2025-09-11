@@ -23,8 +23,8 @@ public class Storage {
     private DateTimeFormatter dateFormat;
 
     private Pattern header = Pattern.compile("^\\[(T|D|E)\\]\\[(X| )\\]\\s+(.*)$");
-    private Pattern pDeadline = Pattern.compile("^(.*)\\s*\\(by:\\s*(.*)\\)\\s*$", Pattern.CASE_INSENSITIVE);
-    private Pattern pEvent = Pattern.compile("^(.*)\\s*\\(from:\\s*(.*?)\\s+to:\\s*(.*?)\\)\\s*$",
+    private Pattern deadlinePattern = Pattern.compile("^(.*)\\s*\\(by:\\s*(.*)\\)\\s*$", Pattern.CASE_INSENSITIVE);
+    private Pattern eventPattern = Pattern.compile("^(.*)\\s*\\(from:\\s*(.*?)\\s+to:\\s*(.*?)\\)\\s*$",
             Pattern.CASE_INSENSITIVE);
 
     public Storage(String filePath) {
@@ -53,25 +53,25 @@ public class Storage {
             if (taskType.equals("T")) {
                 task = new TaskToDo(rest);
             } else if (taskType.equals("D")) {
-                Matcher mDeadline = pDeadline.matcher(rest);
-                if (mDeadline.matches()) {
-                    LocalDate deadlineDate = LocalDate.parse(mDeadline.group(2).trim(), dateFormat);
-                    task = new TaskDeadLine(mDeadline.group(1).trim(), deadlineDate);
-                } else {
+                Matcher deadlineMatcher = deadlinePattern.matcher(rest);
+                if (!deadlineMatcher.matches()) {
                     System.err.println("Skipping unparsable deadline: " + rest);
                     continue;
+                } else if (deadlineMatcher.matches()) {
+                    LocalDate deadlineDate = LocalDate.parse(deadlineMatcher.group(2).trim(), dateFormat);
+                    task = new TaskDeadLine(deadlineMatcher.group(1).trim(), deadlineDate);
                 }
             } else if (taskType.equals("E")) {
-                Matcher mEvent = pEvent.matcher(rest);
-                if (mEvent.matches()) {
-                    LocalDate startDate = LocalDate.parse(mEvent.group(2).trim(), dateFormat);
-                    LocalDate endDate = LocalDate.parse(mEvent.group(3).trim(), dateFormat);
-                    task = new TaskEvent(mEvent.group(1).trim(),
-                            startDate,
-                            endDate);
-                } else {
+                Matcher eventMatcher = eventPattern.matcher(rest);
+                if (!eventMatcher.matches()) {
                     System.err.println("Skipping unparsable event: " + rest);
                     continue;
+                } else if (eventMatcher.matches()) {
+                    LocalDate startDate = LocalDate.parse(eventMatcher.group(2).trim(), dateFormat);
+                    LocalDate endDate = LocalDate.parse(eventMatcher.group(3).trim(), dateFormat);
+                    task = new TaskEvent(eventMatcher.group(1).trim(),
+                            startDate,
+                            endDate);
                 }
             }
 
