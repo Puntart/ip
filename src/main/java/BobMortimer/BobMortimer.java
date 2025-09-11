@@ -66,10 +66,14 @@ public class BobMortimer {
             } else if (command.type == Parser.Type.TODO) {
                 return handleTodo(instruction);
             } else if (command.type == Parser.Type.DEADLINE) {
+                assert command.args != null && command.args.length == 2
+                        : "DEADLINE requires exactly 2 args (description, deadlineString)";
                 String description = command.args[0];
                 String deadlineString = command.args[1];
                 return handleDeadline(description, deadlineString);
             } else if (command.type == Parser.Type.EVENT) {
+                assert command.args != null && command.args.length == 3
+                        : "EVENT requires exactly 3 args (description, startDate, endDate)";
                 String description = command.args[0];
                 String startDateString = command.args[1];
                 String endDateString = command.args[2];
@@ -106,6 +110,7 @@ public class BobMortimer {
      * Helper method to handle List commands.
      */
     public String handleList() {
+        assert tasksList != null : "tasksList must be initialised";
         return ui.showList(tasksList.getTasksList());
     }
 
@@ -157,6 +162,7 @@ public class BobMortimer {
      */
     public String handleDeadline(String description, String deadlineString) throws IOException {
         LocalDate deadlineDate = LocalDate.parse(deadlineString, dateFormat);
+        assert deadlineDate != null : "Parser must produce a valid date";
         TaskDeadLine task = new TaskDeadLine(description, deadlineDate);
         tasksList.add(task);
         storage.save(tasksList.getTasksList());
@@ -169,6 +175,7 @@ public class BobMortimer {
     public String handleEvent(String description, String startDateString, String endDateString) throws IOException {
         LocalDate startDate = LocalDate.parse(startDateString, dateFormat);
         LocalDate endDate = LocalDate.parse(endDateString, dateFormat);
+        assert !endDate.isBefore(startDate) : "Event end date must be >= start date";
         TaskEvent task = new TaskEvent(description, startDate, endDate);
         tasksList.add(task);
         storage.save(tasksList.getTasksList());
@@ -179,6 +186,7 @@ public class BobMortimer {
      * Helper method to handle Delete commands.
      */
     public String handleDelete(String instruction) throws BobException, IOException {
+        assert tasksList.size() != 0 : "Task list should not be empty";
         int n = Integer.parseInt(instruction.trim().split("\\s+")[1]);
         if (n < 1 || n > tasksList.size()) {
             throw new BobException("Invalid task number!");
