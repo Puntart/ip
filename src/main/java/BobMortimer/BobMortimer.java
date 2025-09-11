@@ -38,10 +38,10 @@ public class BobMortimer {
         // Reading from file
         try {
             ArrayList<Task> tasksListToLoad = storage.load();
-            this.tasksList = new TaskList(tasksListToLoad);
+            this.tasksList = new TaskList(tasksListToLoad); //loading the list from file
         } catch (FileNotFoundException e) {
             System.out.println("File does not exist or File not found");
-            this.tasksList = new TaskList(new ArrayList<>(100));
+            this.tasksList = new TaskList(new ArrayList<>(100)); //creates a new list if not found
         }
     }
 
@@ -53,9 +53,7 @@ public class BobMortimer {
      */
     public String getResponse(String instruction) {
 
-        String line = "____________________________________________________________";
-        //User input
-        try {
+        try { //User input
             Parser.Result command = parser.parse(instruction);
             if (command.type == Parser.Type.BYE) { //bye
                 return handleBye();
