@@ -98,4 +98,30 @@ public class TaskList {
         return matchingTaskList;
     }
 
+    /**
+     * Count the number of tasks that have been marked.
+     */
+    public int countMark() {
+        int count = 0;
+        for (int i = 0; i < tasksList.size(); i++) {
+            if (tasksList.get(i).getIsDone() == true) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Count the number of tasks that have not been marked.
+     */
+    public int countUnmark() {
+        int count = 0;
+        for (int i = 0; i < tasksList.size(); i++) {
+            if (tasksList.get(i).getIsDone() == false) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

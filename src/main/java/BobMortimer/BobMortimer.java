@@ -82,6 +82,8 @@ public class BobMortimer {
                 return handleDelete(instruction);
             } else if (command.type == Parser.Type.FIND) {
                 return handleFind(instruction);
+            } else if (command.type == Parser.Type.STATISTICS) {
+                return handleStatistics();
             } else {
                 throw new BobException("wot?");
             }
@@ -208,6 +210,15 @@ public class BobMortimer {
         }
         matchingTaskList = tasksList.findTasks(keyword);
         return ui.showFind(matchingTaskList);
+    }
+
+    /**
+     * Helper method to count number of tasks done and not done.
+     */
+    public String handleStatistics() {
+        int countOfMark = tasksList.countMark();
+        int countOfUnmark = tasksList.countUnmark();
+        return ui.showStatistics(countOfMark, countOfUnmark);
     }
 
 }

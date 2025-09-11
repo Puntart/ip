@@ -11,7 +11,7 @@ public class Parser {
 
     public Parser() { }
 
-    public enum Type { BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN, FIND }
+    public enum Type { BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN, FIND, STATISTICS }
 
     public static class Result {
         public Type type;
@@ -50,6 +50,10 @@ public class Parser {
 
         if (in.toLowerCase().startsWith("find")) {
             return new Result(Type.FIND, in);
+        }
+
+        if (in.equals("statistics")) {
+            return new Result(Type.STATISTICS);
         }
 
         java.util.regex.Matcher deadlineMatcher = deadlinePattern.matcher(in);
