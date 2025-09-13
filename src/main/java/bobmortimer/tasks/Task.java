@@ -1,4 +1,4 @@
-package BobMortimer.tasks;
+package bobmortimer.tasks;
 
 /**
  * Parent Task class to handle individual tasks.

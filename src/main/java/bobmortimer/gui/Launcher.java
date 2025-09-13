@@ -1,4 +1,4 @@
-package BobMortimer.gui;
+package bobmortimer.gui;
 
 import javafx.application.Application;
 

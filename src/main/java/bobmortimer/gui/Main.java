@@ -1,8 +1,8 @@
-package BobMortimer.gui;
+package bobmortimer.gui;
 
 import java.io.IOException;
 
-import BobMortimer.BobMortimer;
+import bobmortimer.BobMortimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

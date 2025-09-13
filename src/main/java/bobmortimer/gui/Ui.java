@@ -1,8 +1,8 @@
-package BobMortimer.gui;
+package bobmortimer.gui;
 
 import java.util.ArrayList;
 
-import BobMortimer.tasks.Task;
+import bobmortimer.tasks.Task;
 
 public class Ui {
 

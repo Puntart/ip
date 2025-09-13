@@ -1,4 +1,4 @@
-package BobMortimer;
+package bobmortimer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,12 +6,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import BobMortimer.gui.Ui;
-import BobMortimer.tasks.Task;
-import BobMortimer.tasks.TaskDeadLine;
-import BobMortimer.tasks.TaskEvent;
-import BobMortimer.tasks.TaskList;
-import BobMortimer.tasks.TaskToDo;
+import bobmortimer.gui.Ui;
+import bobmortimer.tasks.Task;
+import bobmortimer.tasks.TaskDeadLine;
+import bobmortimer.tasks.TaskEvent;
+import bobmortimer.tasks.TaskList;
+import bobmortimer.tasks.TaskToDo;
 
 
 /**
@@ -46,7 +46,7 @@ public class BobMortimer {
     }
 
     /**
-     * Method to run the program.
+     * Runs the program.
      *
      * @throws BobException  if user input is invalid, such as invalid task number or missing arguments
      * @throws IOException   if there is an error writing tasks to the storage file

@@ -1,4 +1,4 @@
-package BobMortimer.tasks;
+package bobmortimer.tasks;
 
 /**
  * Subclass of task for ToDo Tasks.

@@ -1,4 +1,4 @@
-package BobMortimer;
+package bobmortimer;
 
 public class Parser {
 

@@ -1,4 +1,4 @@
-package BobMortimer.gui;
+package bobmortimer.gui;
 
 import java.io.IOException;
 import java.util.Collections;

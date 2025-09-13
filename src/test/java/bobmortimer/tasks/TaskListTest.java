@@ -1,4 +1,4 @@
-package BobMortimer.tasks;
+package bobmortimer.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

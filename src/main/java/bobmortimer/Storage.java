@@ -1,4 +1,4 @@
-package BobMortimer;
+package bobmortimer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,10 +11,10 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import BobMortimer.tasks.Task;
-import BobMortimer.tasks.TaskDeadLine;
-import BobMortimer.tasks.TaskEvent;
-import BobMortimer.tasks.TaskToDo;
+import bobmortimer.tasks.Task;
+import bobmortimer.tasks.TaskDeadLine;
+import bobmortimer.tasks.TaskEvent;
+import bobmortimer.tasks.TaskToDo;
 
 
 public class Storage {

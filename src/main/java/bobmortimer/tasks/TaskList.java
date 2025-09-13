@@ -1,4 +1,4 @@
-package BobMortimer.tasks;
+package bobmortimer.tasks;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ public class TaskList {
     }
 
     /**
-     * Method to return the size of the task list.
+     * Returns the size of the task list.
      *
      * @return the number of tasks currently in the list
      */
@@ -38,7 +38,7 @@ public class TaskList {
     }
 
     /**
-     * Add task to the task list.
+     * Adds a task to the task list.
      *
      * @param t the Task to add to the list
      */

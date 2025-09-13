@@ -1,6 +1,6 @@
-package BobMortimer.gui;
+package bobmortimer.gui;
 
-import BobMortimer.BobMortimer;
+import bobmortimer.BobMortimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
