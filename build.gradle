@@ -48,11 +48,14 @@ checkstyle {
 }
 
 application {
-    mainClass.set("seedu.duke.Duke")
+    mainClass.set("bobmortimer.gui.Launcher")
 }
 
 shadowJar {
-    archiveBaseName = "duke"
+    manifest {
+        attributes 'Main-Class': 'bobmortimer.gui.Launcher'
+    }
+    archiveFileName = 'BobMortimer.jar'
     archiveClassifier = null
 }
 
