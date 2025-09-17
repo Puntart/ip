@@ -27,7 +27,7 @@ public class BobMortimer {
     private boolean isFinished;
 
     /**
-     * Constructor of BobMortimer.
+     * Constructs a BobMortimer object.
      *
      * @param filePath the file path to load tasks from and save tasks to
      */
@@ -46,10 +46,11 @@ public class BobMortimer {
     }
 
     /**
-     * Runs the program.
-     *
-     * @throws BobException  if user input is invalid, such as invalid task number or missing arguments
-     * @throws IOException   if there is an error writing tasks to the storage file
+     * Gets the response for a given user instruction.
+     * @param instruction the input string
+     * @return the response string
+     * @throws BobException if the instruction is invalid
+     * @throws IOException if saving to storage fails
      */
     public String getResponse(String instruction) {
 
@@ -68,16 +69,11 @@ public class BobMortimer {
             } else if (command.type == Parser.Type.DEADLINE) {
                 assert command.args != null && command.args.length == 2
                         : "DEADLINE requires exactly 2 args (description, deadlineString)";
-                String description = command.args[0];
-                String deadlineString = command.args[1];
-                return handleDeadline(description, deadlineString);
+                return handleDeadline(command.args[0], command.args[1]);
             } else if (command.type == Parser.Type.EVENT) {
                 assert command.args != null && command.args.length == 3
                         : "EVENT requires exactly 3 args (description, startDate, endDate)";
-                String description = command.args[0];
-                String startDateString = command.args[1];
-                String endDateString = command.args[2];
-                return handleEvent(description, startDateString, endDateString);
+                return handleEvent(command.args[0], command.args[1], command.args[2]);
             } else if (command.type == Parser.Type.DELETE) {
                 return handleDelete(instruction);
             } else if (command.type == Parser.Type.FIND) {
@@ -102,6 +98,8 @@ public class BobMortimer {
 
     /**
      * Helper method to handle Bye commands.
+     *
+     * @return the goodbye message
      */
     public String handleBye() {
         isFinished = true;
@@ -110,6 +108,8 @@ public class BobMortimer {
 
     /**
      * Helper method to handle List commands.
+     *
+     * @return the formatted task list
      */
     public String handleList() {
         assert tasksList != null : "tasksList must be initialised";
@@ -118,6 +118,11 @@ public class BobMortimer {
 
     /**
      * Helper method to handle Mark commands.
+     *
+     * @param instruction the input string
+     * @return the confirmation message
+     * @throws BobException if the index is invalid
+     * @throws IOException if saving fails
      */
     public String handleMark(String instruction) throws BobException, IOException {
         int n = Integer.parseInt(instruction.split("\\s+")[1]);
@@ -131,6 +136,11 @@ public class BobMortimer {
 
     /**
      * Helper method to handle Unmark commands.
+     *
+     * @param instruction the input string
+     * @return the confirmation message
+     * @throws BobException if the index is invalid
+     * @throws IOException if saving fails
      */
     public String handleUnmark(String instruction) throws BobException, IOException {
         int n = Integer.parseInt(instruction.split("\\s+")[1]);
@@ -144,6 +154,11 @@ public class BobMortimer {
 
     /**
      * Helper method to handle Todo commands.
+     *
+     * @param instruction the input string
+     * @return the add confirmation
+     * @throws BobException if the description is empty
+     * @throws IOException if saving fails
      */
     public String handleTodo(String instruction) throws BobException, IOException {
         if (instruction.length() == 4) {
@@ -161,6 +176,11 @@ public class BobMortimer {
 
     /**
      * Helper method to handle Deadline commands.
+     *
+     * @param description the task description
+     * @param deadlineString the due date string
+     * @return the add confirmation
+     * @throws IOException if saving fails
      */
     public String handleDeadline(String description, String deadlineString) throws IOException {
         LocalDate deadlineDate = LocalDate.parse(deadlineString, dateFormat);
@@ -173,6 +193,12 @@ public class BobMortimer {
 
     /**
      * Helper method to handle Event commands.
+     *
+     * @param description the task description
+     * @param startDateString the start date string
+     * @param endDateString the end date string
+     * @return the add confirmation
+     * @throws IOException if saving fails
      */
     public String handleEvent(String description, String startDateString, String endDateString) throws IOException {
         LocalDate startDate = LocalDate.parse(startDateString, dateFormat);
@@ -186,6 +212,11 @@ public class BobMortimer {
 
     /**
      * Helper method to handle Delete commands.
+     *
+     * @param instruction the input string
+     * @return the delete confirmation
+     * @throws BobException if the index is invalid
+     * @throws IOException if saving fails
      */
     public String handleDelete(String instruction) throws BobException, IOException {
         assert tasksList.size() != 0 : "Task list should not be empty";
@@ -201,6 +232,10 @@ public class BobMortimer {
 
     /**
      * Helper method to handle Find commands.
+     *
+     * @param instruction the input string
+     * @return the formatted matches
+     * @throws BobException if the keyword is empty
      */
     public String handleFind(String instruction) throws BobException {
         String keyword = instruction.substring(5).trim();
@@ -214,6 +249,8 @@ public class BobMortimer {
 
     /**
      * Helper method to count number of tasks done and not done.
+     *
+     * @return the statistics string
      */
     public String handleStatistics() {
         int countOfMark = tasksList.countMark();

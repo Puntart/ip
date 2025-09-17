@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import bobmortimer.tasks.Task;
 
+/**
+ * Handles interactions with the user interface (text output).
+ */
 public class Ui {
 
     private static final String logo = " ____      ___     ____        __  __     ___     ____"
@@ -22,11 +25,20 @@ public class Ui {
 
     }
 
+    /**
+     * Shows the greeting message with logo.
+     * @return the greeting string
+     */
     public String showGreeting() {
         return "Hello I'm\n" + logo
                 + "\nWhat can I do for you?";
     }
 
+    /**
+     * Shows the list of tasks.
+     * @param tasksList the tasks
+     * @return the formatted list
+     */
     public String showList(ArrayList<Task> tasksList) {
         String showL = "Here you go:\n";
         for (int i = 0; i < tasksList.size(); i++) {
@@ -35,24 +47,51 @@ public class Ui {
         return showL;
     }
 
+    /**
+     * Shows a task marked as done.
+     * @param t the task
+     * @return the confirmation string
+     */
     public String showMark(Task t) {
         return "Nice! It's done!:\n" + t.toString();
     }
 
+    /**
+     * Shows a task marked as not done.
+     * @param t the task
+     * @return the confirmation string
+     */
     public String showUnmark(Task t) {
         return "OK, not done!:\n" + t.toString();
     }
 
+    /**
+     * Shows a task added to the list.
+     * @param t the task
+     * @param total total tasks after addition
+     * @return the confirmation string
+     */
     public String showAdded(Task t, int total) {
         return "Got it. I've added this task:\n" + t.toString()
                 + "\nNow you have " + (total) + " tasks in the list";
     }
 
+    /**
+     * Shows a task deleted from the list.
+     * @param t the task
+     * @param remaining remaining tasks
+     * @return the confirmation string
+     */
     public String showDeleted(Task t, int remaining) {
         return "Ok, I have removed the task:\n" + t.toString()
                 + "\nNow you have " + (remaining) + " tasks in the list";
     }
 
+    /**
+     * Shows the results of a find command.
+     * @param matchingTaskList the matching tasks
+     * @return the formatted list of matches
+     */
     public String showFind(ArrayList<Task> matchingTaskList) {
         String showF = "Here are the matching tasks in your list:\n";
         for (int i = 0; i < matchingTaskList.size(); i++) {
