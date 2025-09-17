@@ -16,6 +16,7 @@ import bobmortimer.tasks.TaskDeadLine;
 import bobmortimer.tasks.TaskEvent;
 import bobmortimer.tasks.TaskToDo;
 
+//Javadocs here were made by ChatGPT
 /**
  * Handles loading tasks from a file and saving tasks back to the file.
  */
@@ -44,6 +45,7 @@ public class Storage {
      * @return a list of tasks
      * @throws FileNotFoundException if the file is not found
      */
+    //ChatGPT suggested to shorten this method by using the parseTaskLine helper methods
     public ArrayList<Task> load() throws FileNotFoundException {
         File f = new File(filePath);
         ArrayList<Task> tasksList = new ArrayList<>();

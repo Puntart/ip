@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import bobmortimer.tasks.Task;
 
+//Javadocs here were made by ChatGPT
 /**
  * Handles interactions with the user interface (text output).
  */

@@ -1,5 +1,6 @@
 package bobmortimer;
 
+//Javadocs here were made by ChatGPT
 /**
  * Parses user input into command results for the BobMortimer app.
  */
@@ -43,6 +44,7 @@ public class Parser {
      * @param input the raw user input string
      * @return a Result containing the command Type and its argument tokens
      */
+    //ChatGPT suggested to shorten this method by adding the parse helper methods
     public Result parse(String input) {
         String instruction = input.trim();
 
