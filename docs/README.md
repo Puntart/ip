@@ -7,7 +7,7 @@ Welcome to the Bob Mortimer User Guide! Ever have too many tasks to keep track o
 
 ## How To Start
 1. Ensure you have Java 17 or above installed in your Computer
-2. Download the v2.0 jar file [here](https://github.com/Puntart/ip/releases)
+2. Download the v0.2 jar file [here](https://github.com/Puntart/ip/releases)
 3. Run it using java -jar iP.jar in the terminal
 
 # Features
