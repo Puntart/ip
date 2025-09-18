@@ -110,8 +110,8 @@ public class Ui {
     public String showStatistics(int countOfMark, int countOfUnmark) {
         String statistics = "Here are some statistics!\n";
         statistics += countOfMark + " are done!\n" + countOfUnmark + " are not done!";
-        if (countOfUnmark <= 2) {
-            statistics += "\nGet to it you lazy sausage";
+        if (countOfMark <= 2) {
+            statistics += "\nGet to it you lazy sausage.";
         }
         return statistics;
     }

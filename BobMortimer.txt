@@ -1,8 +1,7 @@
 [T][X] read book
-[D][X] return book (by: Oct 15 2019)
-[E][ ] project meeting (from: Jun 06 2015 to: Jun 07 2015)
-[T][ ] eat more wow sauce
+[D][ ] return book (by: Oct 15 2019)
+[E][ ] project meeting (from: Jun 06 2019 to: Jun 07 2019)
 [D][ ] borrow book (by: May 29 2019)
-[E][ ] kagi meeting (from: May 20 2016 to: May 22 2016)
-[T][ ] eat book
+[E][ ] camp (from: May 20 2019 to: May 22 2019)
+[T][ ] revise on CS2103
 [T][X] eat some meat
