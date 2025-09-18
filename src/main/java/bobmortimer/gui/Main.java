@@ -20,9 +20,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/View/MainWindow.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             stage.setTitle("Bob Mortimer");
-            Image image = new Image("/images/DaBob2.png");
+            Image image = new Image(this.getClass().getResourceAsStream("/images/DaBob.png"));
             stage.getIcons().add(image);
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);

@@ -1,7 +1,9 @@
 [T][X] read book
-[D][ ] return book (by: Oct 15 2019)
 [E][ ] project meeting (from: Jun 06 2019 to: Jun 07 2019)
 [D][ ] borrow book (by: May 29 2019)
 [E][ ] camp (from: May 20 2019 to: May 22 2019)
 [T][ ] revise on CS2103
 [T][X] eat some meat
+[T][ ] finish assignment
+[D][ ] bake brownies (by: Sep 18 2025)
+[E][ ] finals week (from: Nov 20 2025 to: Nov 27 2025)

@@ -139,7 +139,7 @@ public class Parser {
         java.util.regex.Matcher deadlineMatcher = deadlinePattern.matcher(instruction);
         if (!deadlineMatcher.matches()) {
             throw new BobException("That's not how you input a deadline mate.\n"
-                + "Try a format like deadline return book /by 2/12/2019");
+                + "Try a format like deadline return book /by 2019-10-15");
         }
         String description = deadlineMatcher.group(1).trim();
         String deadline = deadlineMatcher.group(2).trim();

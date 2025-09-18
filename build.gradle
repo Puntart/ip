@@ -55,7 +55,7 @@ shadowJar {
     manifest {
         attributes 'Main-Class': 'bobmortimer.gui.Launcher'
     }
-    archiveFileName = 'BobMortimer.jar'
+    archiveFileName = 'iP.jar'
     archiveClassifier = null
 }
 
