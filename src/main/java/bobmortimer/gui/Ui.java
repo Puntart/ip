@@ -103,6 +103,9 @@ public class Ui {
 
     /**
      * Construct the statistics string.
+     * @param countOfMark number of completed tasks
+     * @param countOfUnmark number of uncompleted tasks
+     * @return the formatted statistics string
      */
     public String showStatistics(int countOfMark, int countOfUnmark) {
         String statistics = "Here are some statistics!\n";

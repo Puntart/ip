@@ -25,6 +25,7 @@ public class BobMortimer {
     private Parser parser;
     private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private boolean isFinished;
+    private String startUpWarning;
 
     /**
      * Constructs a BobMortimer object.
@@ -40,8 +41,10 @@ public class BobMortimer {
             ArrayList<Task> tasksListToLoad = storage.load();
             this.tasksList = new TaskList(tasksListToLoad); //loading the list from file
         } catch (FileNotFoundException e) {
-            System.out.println("File does not exist or File not found");
             this.tasksList = new TaskList(new ArrayList<>(100)); //creates a new list if not found
+            this.startUpWarning = ui.showError(
+                    "File not found: " + filePath
+                            + "\nDon't worry mate, I'll start a new list.");
         }
     }
 
@@ -56,29 +59,29 @@ public class BobMortimer {
 
         try { //User input
             Parser.Result command = parser.parse(instruction);
-            if (command.type == Parser.Type.BYE) { //bye
+            if (command.getType() == Parser.Type.BYE) { //bye
                 return handleBye();
-            } else if (command.type == Parser.Type.LIST) { //list
+            } else if (command.getType() == Parser.Type.LIST) { //list
                 return handleList();
-            } else if (command.type == Parser.Type.MARK) { //mark
+            } else if (command.getType() == Parser.Type.MARK) { //mark
                 return handleMark(instruction);
-            } else if (command.type == Parser.Type.UNMARK) { //unmark
+            } else if (command.getType() == Parser.Type.UNMARK) { //unmark
                 return handleUnmark(instruction);
-            } else if (command.type == Parser.Type.TODO) {
+            } else if (command.getType() == Parser.Type.TODO) {
                 return handleTodo(instruction);
-            } else if (command.type == Parser.Type.DEADLINE) {
-                assert command.args != null && command.args.length == 2
+            } else if (command.getType() == Parser.Type.DEADLINE) {
+                assert command.getArgs() != null && command.getArgs().length == 2
                         : "DEADLINE requires exactly 2 args (description, deadlineString)";
-                return handleDeadline(command.args[0], command.args[1]);
-            } else if (command.type == Parser.Type.EVENT) {
-                assert command.args != null && command.args.length == 3
+                return handleDeadline(command.getArgs()[0], command.getArgs()[1]);
+            } else if (command.getType() == Parser.Type.EVENT) {
+                assert command.getArgs() != null && command.getArgs().length == 3
                         : "EVENT requires exactly 3 args (description, startDate, endDate)";
-                return handleEvent(command.args[0], command.args[1], command.args[2]);
-            } else if (command.type == Parser.Type.DELETE) {
+                return handleEvent(command.getArgs()[0], command.getArgs()[1], command.getArgs()[2]);
+            } else if (command.getType() == Parser.Type.DELETE) {
                 return handleDelete(instruction);
-            } else if (command.type == Parser.Type.FIND) {
+            } else if (command.getType() == Parser.Type.FIND) {
                 return handleFind(instruction);
-            } else if (command.type == Parser.Type.STATISTICS) {
+            } else if (command.getType() == Parser.Type.STATISTICS) {
                 return handleStatistics();
             } else {
                 throw new BobException("wot?");
@@ -90,6 +93,10 @@ public class BobMortimer {
 
     public boolean getIsFinished() {
         return this.isFinished;
+    }
+
+    public String getStartupWarning() {
+        return this.startUpWarning;
     }
 
     public String showGreeting() {

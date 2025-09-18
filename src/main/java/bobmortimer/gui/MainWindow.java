@@ -38,6 +38,11 @@ public class MainWindow extends AnchorPane {
         dialogContainer.getChildren().add(
                 DialogBox.getDukeDialog(bobMortimer.showGreeting(), bobImage)
         );
+        String startupWarning = bobMortimer.getStartupWarning();
+        if (startupWarning != null) {
+            dialogContainer.getChildren().add(
+                    DialogBox.getDukeDialog(startupWarning, bobImage));
+        }
     }
 
     /**
